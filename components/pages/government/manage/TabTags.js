@@ -12,25 +12,20 @@ import {
     TableCell,
     TableContainer,
     TableHead,
-    TableRow
+    TableRow, Typography
 } from "@material-ui/core";
 import {gql, useMutation, useQuery} from "@apollo/client";
 import {useState} from "react";
 import {Field, Form, Formik} from "formik";
 import {Create} from "@material-ui/icons";
 import {TextField} from "formik-material-ui";
-import contrast from "../../../../utils/createColorContrast";
 
-export default function TabRoles({government}) {
+export default function TabTags({government}) {
     const { loading, error, data } = useQuery(gql`
-        query ListRoles($id: ID!) {
-            government(id: $id) {
-                roles {
-                    uid
-                    name
-                    color
-                    permissions
-                }
+        query ListTags($id: ID!) {
+            tags(government: $id) {
+                uid
+                name
             }
         }
     `, {
@@ -42,32 +37,23 @@ export default function TabRoles({government}) {
 
     return <Container>
         <Box m={"2rem 0"}>
+            <Typography variant={"body1"}>
+                Tags represent attributes for a given petition. Each petition may specify up to five.
+            </Typography>
             {data && (
                 <TableContainer>
                     <Table>
                         <TableHead>
                             <Button color={"primary"} variant={"outlined"} onClick={() => setShowCreate(true)}>
-                                Create Role
+                                Create Tag
                             </Button>
                             <TableRow>
                                 <TableCell>Name</TableCell>
-                                <TableCell>Display As</TableCell>
-                                <TableCell>Permissions</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.government.roles.map(r => <TableRow>
+                            {data.tags.map(r => <TableRow>
                                 <TableCell>{r.name}</TableCell>
-                                <TableCell>
-                                    <Chip
-                                        size={"small"}
-                                        label={r.name}
-                                        style={{backgroundColor: r.color, color: contrast(r.color)}}
-                                    />
-                                </TableCell>
-                                <TableCell>{r.permissions.map(p => (
-                                    <Chip label={p}/>
-                                ))}</TableCell>
                             </TableRow>)}
                         </TableBody>
                     </Table>
@@ -78,7 +64,7 @@ export default function TabRoles({government}) {
                 <CircularProgress/>
             )}
         </Box>
-        <CreateRoleDialog
+        <CreateTargetDialog
             open={showCreate}
             onClose={() => setShowCreate(false)}
             government={government}
@@ -92,18 +78,17 @@ export default function TabRoles({government}) {
 }
 
 
-function CreateRoleDialog({open, onClose, government}) {
+function CreateTargetDialog({open, onClose, government}) {
     const [signPetition, {loading, error, data}] = useMutation(gql`
-        mutation CreateRole($government: ID!, $input: CreateRoleRequest!) {
-            createRole(government: $government, input: $input) {
+        mutation CreateTag($government: ID!, $input: CreateTagRequest!) {
+            createTag(government: $government, input: $input) {
                 uid
                 name
-                permissions
             }
         }
     `);
 
-    const submit = ({name, color}, {setSubmitting}) => {
+    const submit = ({name}, {setSubmitting}) => {
         // Reflect submitting status in the form
         setSubmitting(true);
 
@@ -111,8 +96,7 @@ function CreateRoleDialog({open, onClose, government}) {
             variables: {
                 government: government.uid,
                 input: {
-                    name,
-                    color
+                    name
                 }
             }
         }).then(() => {
@@ -129,39 +113,24 @@ function CreateRoleDialog({open, onClose, government}) {
         >
             <Formik
                 initialValues={{
-                    name: null,
-                    color: null
+                    name: null
                 }}
                 onSubmit={submit}
             >
-                {({ submitForm, isSubmitting, values }) => (
+                {({ submitForm, isSubmitting }) => (
                     <Form>
-                        <DialogTitle>Create Role</DialogTitle>
+                        <DialogTitle>Create Tag</DialogTitle>
                         <DialogContent>
                             <Box m={"1rem 0"}>
                                 <Field
                                     id={"name"}
                                     component={TextField}
                                     name="name"
-                                    label="Role Name"
+                                    label="Tag Name"
                                     multiline={false}
                                     variant={"outlined"}
                                     fullWidth
                                 />
-                            </Box>
-                            <Box m={"1rem 0"}>
-                                <Field
-                                    id={"color"}
-                                    component={TextField}
-                                    name="color"
-                                    label="Role Color (HEX Code, with #)"
-                                    multiline={false}
-                                    variant={"outlined"}
-                                    fullWidth
-                                />
-                                <Box p={"1rem"} clone>
-                                    <div style={{backgroundColor: values.color, height: "1rem", width: "1rem"}}/>
-                                </Box>
                             </Box>
                         </DialogContent>
                         <DialogActions>

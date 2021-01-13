@@ -12,6 +12,8 @@ export default function GoogleLoginRedirectPage() {
     const [error, setError] = useState(false);
     const [didFetch, setDidFetch] = useState(false);
 
+    const callback = router.query.state;
+
     useEffect(() => {
         if (didFetch || Object.keys(router.query).length === 0) {
             return;
@@ -23,7 +25,7 @@ export default function GoogleLoginRedirectPage() {
             params: router.query
         }).then(_res => {
             console.log('Logged in user');
-            router.push('/account');
+            router.push(callback ? callback : '/account');
         }).catch(err => {
             console.log(err);
             setError(true);

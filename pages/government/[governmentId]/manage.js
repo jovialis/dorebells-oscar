@@ -24,7 +24,10 @@ function ManageGovernmentPage({user, government}) {
     const [tab, setTab] = useState(0);
     const tabs = [
         <TabGeneral government={government}/>,
-        <TabRoles government={government}/>
+        <TabRoles government={government}/>,
+        <TabUsers government={government}/>,
+        <TabTargets government={government}/>,
+        <TabTags government={government}/>,
     ];
 
     return <div className={'page-government-manage'}>
@@ -37,6 +40,9 @@ function ManageGovernmentPage({user, government}) {
             >
                 <Tab label={"General"}/>
                 <Tab label={"Roles"}/>
+                <Tab label={"Users"}/>
+                <Tab label={"Targets"}/>
+                <Tab label={"Tags"}/>
             </Tabs>
             <div>
                 {tabs[tab]}
@@ -58,6 +64,9 @@ import {forServer} from "../../../utils/createApolloClient";
 import {useState} from "react";
 import TabGeneral from "../../../components/pages/government/manage/TabGeneral";
 import TabRoles from "../../../components/pages/government/manage/TabRoles";
+import TabTargets from "../../../components/pages/government/manage/TabTargets";
+import TabTags from "../../../components/pages/government/manage/TabTags";
+import TabUsers from "../../../components/pages/government/manage/TabUsers";
 const client = forServer();
 
 export async function getServerSideProps(context) {

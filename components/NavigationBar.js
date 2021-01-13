@@ -11,13 +11,14 @@ import {
     Button,
     CircularProgress,
     Link,
-    ListItemAvatar,
+    ListItemAvatar, Menu, MenuItem,
     Toolbar,
     Typography
 } from "@material-ui/core";
 import {AccountCircle} from "@material-ui/icons";
 
 import NextLink from 'next/link';
+import {useRouter} from "next/router";
 
 const GetMe = gql`
     query GetMe {
@@ -43,6 +44,10 @@ export default function NavigationBar() {
         setLoad(true);
     }, []);
 
+    const [menuAnchor, setMenuAnchor] = useState(null);
+
+    const router = useRouter();
+
     return (
         <AppBar position={"static"} elevation={0}>
             <Toolbar variant={"dense"}>
@@ -58,12 +63,32 @@ export default function NavigationBar() {
                     <CircularProgress disableShrink/>
                 )}
 
-                {(data && data.me) && (
-                    <Avatar src={data.me.thumbnail} alt={data.me.name[0]}/>
-                )}
+                {(data && data.me) && ([
+                    <Link href={'/petition/create'}>
+                        <Button variant={'contained'}>
+                            New Petition
+                        </Button>
+                    </Link>,
+                    <Box>
+                        <Avatar
+                            src={data.me.thumbnail}
+                            alt={data.me.name[0]}
+                            onClick={e => setMenuAnchor(e.target)}
+                        />
+                        <Menu
+                            open={Boolean(menuAnchor)}
+                            anchorEl={menuAnchor}
+                            onClose={() => setMenuAnchor(null)}
+                        >
+                            <MenuItem onClick={() => {
+                                router.push('/account/logout')
+                            }}>Logout</MenuItem>
+                        </Menu>
+                    </Box>
+                ])}
 
                 {(error || (data && !data.me)) && (
-                    <Link href={'/account/login'}>
+                    <Link href={`/account/login?callback=${ router.pathname }`}>
                         <Button startIcon={<AccountCircle/>} variant={"outlined"}>
                             Login
                         </Button>

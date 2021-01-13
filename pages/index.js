@@ -6,7 +6,7 @@ import {useQuery, gql} from '@apollo/client';
 import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import NavigationBar from "../components/NavigationBar";
-import {Avatar, Chip, Divider, Link, Typography} from "@material-ui/core";
+import {Avatar, Chip, Container, Divider, Link, Typography} from "@material-ui/core";
 import dayjs from "dayjs";
 import relativeTime from 'dayjs/plugin/relativeTime';
 dayjs.extend(relativeTime);
@@ -38,7 +38,7 @@ export default function HomePage() {
         <div className={"page-index"}>
             <NavigationBar/>
             {data && (
-                <div>
+                <Container>
                     <Typography variant={"h2"}>
                         Trending Petitions
                     </Typography>
@@ -60,7 +60,7 @@ export default function HomePage() {
                             <Divider/>
                         </div>
                     ))}
-                </div>
+                </Container>
             )}
 
         </div>

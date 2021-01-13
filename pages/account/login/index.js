@@ -31,7 +31,7 @@ export default function PageLogin() {
                                 </Typography>
                                 <List>
                                     <ListItem>
-                                        <Link href={'/account/login/google'}>
+                                        <Link href={`/account/login/google?callback=${router.query.callback && router.query.callback}`}>
                                             <Button color={"primary"}>
                                                 Login w/ Google
                                             </Button>

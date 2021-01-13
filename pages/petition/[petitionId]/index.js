@@ -2,51 +2,48 @@
  * Created on 12/9/20 by jovialis (Dylan Hanson)
  **/
 
-import {useQuery, gql, useMutation} from '@apollo/client';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import {useRouter} from "next/router";
 
-import {Formik, Form, Field} from "formik";
+import {Field, Form, Formik} from "formik";
 import {
-    AppBar,
-    CircularProgress,
-    Container,
-    Grid,
-    Snackbar,
-    Toolbar,
-    Typography,
-    Alert,
-    SnackbarContent,
+    Avatar,
+    Box,
+    Breadcrumbs,
     Button,
     Card,
+    CardActions,
     CardContent,
     Chip,
-    CardActionArea,
-    CardActions,
+    CircularProgress,
+    Container,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     Divider,
-    Avatar,
+    Grid,
+    IconButton,
+    Link,
+    List,
     ListItem,
     ListItemAvatar,
     ListItemText,
-    List,
-    Paper,
-    GridList,
-    ListSubheader,
-    CardHeader,
-    Link,
-    Dialog,
-    DialogTitle, DialogContent, DialogContentText, DialogActions, FormControlLabel, FormControl, FormGroup,
-    Box, IconButton, Breadcrumbs,
+    Snackbar,
+    SnackbarContent,
+    Typography,
 } from "@material-ui/core";
 import {useEffect, useState} from "react";
 
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-dayjs.extend(relativeTime);
-
 import NavigationBar from "../../../components/NavigationBar";
-import {CheckBox, Comment, KeyboardArrowRightSharp, ThumbUp, ThumbUpAltOutlined} from "@material-ui/icons";
+import {KeyboardArrowRightSharp, ThumbUp, ThumbUpAltOutlined} from "@material-ui/icons";
 import {TextField} from "formik-material-ui";
 import contrast from "../../../utils/createColorContrast";
+
+dayjs.extend(relativeTime);
 
 const GET_DATA = gql`
     query GetMeAndPetition($id: ID!) {
@@ -369,7 +366,11 @@ function RenderPage({petition, user}) {
                                         e.preventDefault();
                                         router.push(`/petition/${petition.uid}/signatures`)
                                     }}>
-                                        And {petition.signatureCount - 3} more...
+                                        {petition.signatureCount > 3 ? (
+                                            `And ${petition.signatureCount - 3} more...`
+                                        ) : (
+                                            `View all...`
+                                        )}
                                     </Link>
                                 </Typography>
                             </CardContent>

@@ -20,7 +20,8 @@ export async function getServerSideProps(context) {
         hd: 'vanderbilt.edu',
         prompt: 'select_account',
         scope: ['email', 'profile', 'openid'],
-        session: false
+        session: false,
+        state: context.query.callback
     });
 
     middleware(context.req, context.res);

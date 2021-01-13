@@ -6,10 +6,52 @@
  * Client Rendering Stuff
  */
 import {useQuery, gql} from '@apollo/client';
+import {Paper, Container, Typography, Link, Chip, Avatar, Divider} from "@material-ui/core";
+import * as dayjs from "dayjs";
+import NavigationBar from "../../../components/NavigationBar";
 
 function GovernmentPage({government}) {
     return <div>
-        <h1>{government.name}</h1>
+        <NavigationBar/>
+        <Container>
+            <Typography variant={"h1"}>
+                {government.name}
+            </Typography>
+            {government.archived && (
+                <Paper>
+                    <Typography variant={"h2"}>
+                        Archived
+                    </Typography>
+                    <Typography variant={"body1"}>
+                        This Government is archived, and its petitions can no longer be signed or modified.
+                    </Typography>
+                </Paper>
+            )}
+            <Typography variant={"h3"}>
+                Top Petitions
+            </Typography>
+            <Typography variant={"body1"}>
+                These are the most signed petitions during {government.name}.
+            </Typography>
+            {government.petitions.map(p => (
+                <div>
+                    <Link href={`/petition/${p.uid}`}>
+                        <Typography variant={"h5"}>
+                            {p.name}
+                        </Typography>
+                    </Link>
+                    <Typography variant={"body1"}>
+                        {p.signatureCount} Signatures
+                    </Typography>
+                    <Chip
+                        size={"medium"}
+                        avatar={<Avatar src={p.creator.thumbnail} alt={p.creator.name[0]}/>}
+                        label={p.creator.name}
+                    />
+                    <Divider/>
+                </div>
+            ))}
+        </Container>
     </div>
 }
 
@@ -17,6 +59,7 @@ function GovernmentPage({government}) {
  * SSR Stuff
  */
 import {forServer} from "../../../utils/createApolloClient";
+import {useEffect, useState} from "react";
 const client = forServer();
 
 export async function getStaticPaths() {
@@ -56,6 +99,16 @@ export async function getStaticProps(context) {
                 name
                 current
                 archived
+                petitions {
+                    uid
+                    name
+                    createdOn
+                    signatureCount
+                    creator {
+                        thumbnail
+                        name
+                    }
+                }
             }
         }
     `;
