@@ -1,8 +1,9 @@
-import {ApolloClient, InMemoryCache} from "@apollo/client";
 
 /**
  * Created on 12/20/20 by jovialis (Dylan Hanson)
  **/
+
+import {ApolloClient, InMemoryCache} from "@apollo/client";
 
 export function forClient() {
     return new ApolloClient({
@@ -14,7 +15,7 @@ export function forClient() {
 
 export function forServer() {
     return new ApolloClient({
-        uri: 'http://localhost:5000/graphql',
+        uri: process.env.GRAPHQL_URL,
         cache: new InMemoryCache(),
         credentials: 'include'
     });

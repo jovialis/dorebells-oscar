@@ -1,5 +1,5 @@
 module.exports = {
     rewrites: () => [
-        { source: '/api/gql', destination: 'http://localhost:5000/graphql' }
+        { source: '/api/gql', destination: process.env.GRAPHQL_URL }
     ]
 }

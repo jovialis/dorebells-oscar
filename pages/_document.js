@@ -14,10 +14,7 @@ export default class NextDocument extends Document {
                 <Head>
                     {/* PWA primary color */}
                     <meta name="theme-color" content={theme.palette.primary.main} />
-                    <link
-                        rel="stylesheet"
-                        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-                    />
+                    <link rel="stylesheet" href="https://use.typekit.net/qsb7aub.css"/>
                 </Head>
                 <body>
                 <Main />
